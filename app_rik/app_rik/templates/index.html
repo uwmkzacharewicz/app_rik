@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+    <title>Tracker Autobusu</title>
+    <style>
+        #map { 
+            height: 50%;
+            width: 50%;            
+         }
+         .label {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            color: black;
+            font-size: 20px;
+            text-align: right;
+            transform: rotate(90deg); /* This will rotate the text 90 degrees */
+            transform-origin: left top;
+            line-height: 20px;  /* Aby wyśrodkować tekst wertykalnie */
+        }
+         .stop {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: blue;
+            position: absolute;
+            margin-top: -10px;  /* Centrowanie kółka na linii */
+            margin-left: -10px; /* Centrowanie kółka na linii */
+        }
+        
+        
+        #horizontal-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: red;
+            position: absolute;
+            margin-top: -10px;  /* Centrowanie markera na linii */
+            margin-left: -10px; /* Centrowanie markera na linii */            
+        }
+        .stop-nearby {
+            animation: pulseAnimation 1s infinite;
+        }
+        
+        @keyframes pulseAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    {% load static %}
+    <!-- Element HTML dla mapy -->
+    <div id="container">       
+        <div id="map" style="height: 500px;"></div>
+        <label>
+            <input type="checkbox" id="track-marker-checkbox" checked>
+            Śledź marker na mapie
+        </label>
+        <div id="coords-label" style="margin-top: 20px;"></div>
+        <div id="idx-label" style="margin-top: 20px;"></div>
+        <div style="margin-top: 20px;">
+            <button onclick="startAnimation()">Start</button>
+            <button onclick="pauseAnimation()">Pause</button>
+            <button onclick="stopAnimation()">Reset</button>
+            <button onclick="previousPoint()">Previous Point</button>
+            <button onclick="nextPoint()">Next Point</button>
+            <button onclick="backPoint(10)">Back 10</button>
+            <button onclick="skipPoint(10)">Skip 10</button>
+            
+            <input type="range" min="50" step="50" max="1000" value="200" id="speed-slider" oninput="updateInterval()">
+            <span id="slider-value">200</span>
+            
+            <input type="range" min="0" step="1" max="1000" value="0" id="idx-slider" oninput="updateIndex()">
+            <span id="idx-value">200</span>
+        </div>
+        <div id="line-container" style="width: 100%; height: 100px; position:relative; margin-top: 50px;">
+            <div id="horizontal-line" style="position: absolute; top: 0%; width: 100%; height: 2px; background-color: black;"></div>
+            <div id="horizontal-marker" style="position: absolute; top: 0%; left: 25%;"></div>
+        </div>
+        <div id="nearby-name-label" style="margin-top: 20px;"></div>
+        <div id="nearby-distance-label" style="margin-top: 20px;"></div>
+    </div>
+
+    <!-- Dodanie skryptu JavaScript dla Leaflet.js -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Inicjalizacja mapy i dodanie markera -->
+    <script src="{% static 'js/app.js' %}"></script>
+            
+</body>
+</html>
